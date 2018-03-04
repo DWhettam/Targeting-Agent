@@ -6,12 +6,12 @@ from sklearn.model_selection import train_test_split
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-from keras.optimizers import RMSprop
+from keras.optimizers import SGD
 import time
 
 start_time = time.time()
 batch_size = 128
-num_classes = 10
+num_classes = 1
 epochs = 100
 
 # the data, shuffled and split between train and test sets
@@ -29,20 +29,17 @@ x_test = x_test.astype('float32')
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
-# convert class vectors to binary class matrices
-y_train = keras.utils.to_categorical(y_train, num_classes)
-y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
-model.add(Dense(512, activation='sigmoid', input_shape=(2,)))
+model.add(Dense(2, activation='relu', input_shape=(2,)))
 model.add(Dropout(0.2))
-model.add(Dense(512, activation='sigmoid'))
+model.add(Dense(2, activation='relu'))
 model.add(Dropout(0.2))
 model.add(Dense(num_classes, activation='softmax'))
 model.summary()
 
-model.compile(loss='categorical_crossentropy',
-              optimizer=RMSprop(),
+model.compile(loss='binary_crossentropy',
+              optimizer=SGD(lr = 0.01, momentum = 0.5),
               metrics=['accuracy'])
 
 history = model.fit(x_train, y_train,
