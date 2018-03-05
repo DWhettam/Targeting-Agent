@@ -11,7 +11,6 @@ import time
 
 start_time = time.time()
 batch_size = 128
-num_classes = 1
 epochs = 100
 
 # the data, shuffled and split between train and test sets
@@ -20,8 +19,8 @@ train, test = train_test_split(df, test_size = 0.2, random_state = None, shuffle
 
 x_train = train.iloc[:,0:2]
 y_train = train.iloc[:,-1]
-x_test = train.iloc[:,0:2]
-y_test = train.iloc[:,-1]
+x_test = test.iloc[:,0:2]
+y_test = test.iloc[:,-1]
 
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
@@ -31,16 +30,16 @@ print(x_test.shape[0], 'test samples')
 
 
 model = Sequential()
-model.add(Dense(2, activation='relu', input_shape=(2,)))
+model.add(Dense(124, activation='relu', input_shape=(2,)))
 model.add(Dropout(0.2))
-model.add(Dense(2, activation='relu'))
+model.add(Dense(124, activation='relu'))
 model.add(Dropout(0.2))
-model.add(Dense(num_classes, activation='softmax'))
+model.add(Dense(1, activation='relu'))
 model.summary()
 
 model.compile(loss='binary_crossentropy',
-              optimizer=SGD(lr = 0.01, momentum = 0.5),
-              metrics=['accuracy'])
+              optimizer=SGD(lr = 0.01, momentum = 0.3),
+              metrics=['acc'])
 
 history = model.fit(x_train, y_train,
                     batch_size=batch_size,
