@@ -3,11 +3,11 @@ from __future__ import print_function
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
 import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.optimizers import SGD
-from keras.utils import to_categorical
 import matplotlib.pyplot as plt
 import time
 
@@ -24,10 +24,6 @@ y_train = train.iloc[:,-1]
 x_test = test.iloc[:,0:2]
 y_test = test.iloc[:,-1]
 
-x_train = x_train.astype('float32')
-x_test = x_test.astype('float32')
-# y_train = to_categorical(y_train)
-# y_test = to_categorical(y_test)
 
 print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
@@ -41,13 +37,15 @@ print(x_test.shape[0], 'test samples')
 # plt.show()
 
 model = Sequential()
-model.add(Dense(124, activation='relu', input_dim = 2))
+model.add(Dense(124, activation='relu', input_shape = (2,)))
+model.add(Dropout(0.5))
 model.add(Dense(124, activation='relu'))
+model.add(Dropout(0.1))
 model.add(Dense(1, activation='sigmoid'))
 model.summary()
 
 model.compile(loss='binary_crossentropy',
-              optimizer=SGD(lr = 0.01, momentum = 0.3),
+              optimizer=SGD(lr = 1, momentum = 0.03),
               metrics=['acc'])
 
 history = model.fit(x_train, y_train,
@@ -57,11 +55,11 @@ history = model.fit(x_train, y_train,
                     validation_data=(x_test, y_test))
 score = model.evaluate(x_test, y_test, verbose=0)
 
-tmp = model.outputs
-model.outputs = [model.layers[-1].output]
 y_pred = model.predict(x_test)
-print(y_pred)
-
+y_pred[y_pred <= 0.5] = 0
+y_pred[y_pred > 0.5] = 1
+tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+print("tn: ", tn, "fp: ", fp, "fn: ", fn, "tp: ", tp)
 
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
