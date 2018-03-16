@@ -3,6 +3,7 @@ from __future__ import print_function
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 import keras
@@ -15,8 +16,8 @@ import matplotlib.pyplot as plt
 import time
 
 start_time = time.time()
-batch_size = 128
-epochs = 1000
+batch_size = 1024
+epochs = 1
 
 # the data, shuffled and split between train and test sets
 df = (pd.read_csv('data.csv'))
@@ -40,10 +41,21 @@ print(x_test.shape[0], 'test samples')
 #     plt.scatter(df.ix[idx,0], df.ix[idx,1],c = col, marker = marker)
 # plt.show()
 
-learning_rates = [0.0001,0.001,0.01,0.1,0.2,0.4,0.8, 1]
-train_accuracies = []
-test_accuracies = []
-for learn_rate in learning_rates:
+learning_rates = [0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,
+                    0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,
+                    0.001,0.001,0.001,0.001,0.001,0.001,
+                    0.01,0.01,0.01,0.01,0.01,0.01,
+                    0.1,0.1,0.1,0.1,0.1,0.1,
+                    1,1,1,1,1,1]
+momentum_terms = [0.00001,0.0001,0.001,0.01,0.1,1,
+                    0.00001,0.0001,0.001,0.01,0.1,1,
+                    0.00001,0.0001,0.001,0.01,0.1,1,
+                    0.00001,0.0001,0.001,0.01,0.1,1,
+                    0.00001,0.0001,0.001,0.01,0.1,1,
+                    0.00001,0.0001,0.001,0.01,0.1,1,]
+train_accuracies = np.zeros([36])
+test_accuracies = np.zeros([36])
+for idx, learn_rate in enumerate(learning_rates):
     model = Sequential()
     model.add(Dense(18, activation='relu', input_shape = (2,)))
     model.add(Dense(18, activation='relu'))
@@ -51,7 +63,7 @@ for learn_rate in learning_rates:
     model.summary()
 
     model.compile(loss='binary_crossentropy',
-                  optimizer=SGD(lr = learn_rate, momentum = 0.01),
+                  optimizer=SGD(lr = learning_rates[idx], momentum = momentum_terms[idx]),
                   metrics=[binary_accuracy])
 
     history = model.fit(x_train, y_train,
@@ -60,16 +72,19 @@ for learn_rate in learning_rates:
                         verbose=1,
                         validation_data=(x_test, y_test))
     score = model.evaluate(x_test, y_test, verbose=0)
-    train_accuracies.append(history.history['binary_accuracy'][-1] * 100)
-    test_accuracies.append(history.history['val_binary_accuracy'][-1] * 100)
+    print(history.history['val_binary_accuracy'][-1])
+    train_accuracies[idx] = history.history['binary_accuracy'][-1]
+    test_accuracies[idx] =  history.history['val_binary_accuracy'][-1]
+    print(test_accuracies)
 
 
-train, = plt.plot(learning_rates, train_accuracies, label = 'Train')
-#test, = plt.plot(nodes, test_accuracies, label = 'Test')
-#plt.legend([test, train], ['Test', 'Train'])
-plt.xlabel("Learning Rate")
-plt.ylabel("Accuracy %")
-plt.xscale('log')
+x = momentum_terms
+y = learning_rates
+z = test_accuracies
+print(test_accuracies)
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+ax.plot_trisurf(x, y, z, cmap='viridis', edgecolor='none');
 plt.show()
 
 y_pred = model.predict(x_test)
