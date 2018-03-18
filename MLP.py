@@ -17,7 +17,7 @@ import time
 
 start_time = time.time()
 batch_size = 1024
-epochs = 1
+epochs = 1000
 
 # the data, shuffled and split between train and test sets
 df = (pd.read_csv('data.csv'))
@@ -63,7 +63,7 @@ for idx, learn_rate in enumerate(learning_rates):
     model.summary()
 
     model.compile(loss='binary_crossentropy',
-                  optimizer=SGD(lr = learning_rates[idx], momentum = momentum_terms[idx]),
+                  optimizer=SGD(lr = learning_rates[idx], momentum = momentum_terms[idx], decay = 0.001),
                   metrics=[binary_accuracy])
 
     history = model.fit(x_train, y_train,
@@ -72,19 +72,25 @@ for idx, learn_rate in enumerate(learning_rates):
                         verbose=1,
                         validation_data=(x_test, y_test))
     score = model.evaluate(x_test, y_test, verbose=0)
-    print(history.history['val_binary_accuracy'][-1])
     train_accuracies[idx] = history.history['binary_accuracy'][-1]
     test_accuracies[idx] =  history.history['val_binary_accuracy'][-1]
-    print(test_accuracies)
 
 
 x = momentum_terms
 y = learning_rates
 z = test_accuracies
-print(test_accuracies)
+
 fig = plt.figure()
 ax = fig.gca(projection='3d')
-ax.plot_trisurf(x, y, z, cmap='viridis', edgecolor='none');
+ticks = [0.00001,0.0001,0.001,0.01,0.1,1]
+ax.set_xticks(np.log10(ticks))
+ax.set_xticklabels(ticks)
+ax.set_yticks(np.log10(ticks))
+ax.set_yticklabels(ticks)
+ax.set_xlabel('Momentum Term')
+ax.set_ylabel('Learning Rate')
+ax.set_zlabel('Accuracy')
+ax.plot_trisurf(np.log10(x), np.log10(y), z, cmap='viridis', edgecolor='none');
 plt.show()
 
 y_pred = model.predict(x_test)
