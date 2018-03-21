@@ -22,3 +22,5 @@ Over 1000 epochs, this network is classifying with ~98% accuracy
 * [Keras](https://github.com/keras-team/keras) with [TensorFlow](https://www.tensorflow.org) backend
 * [Matplotlib](https://github.com/matplotlib/matplotlib)
 * [SciKit-Learn](https://github.com/scikit-learn/scikit-learn)
+* [Numpy](https://github.com/numpy/numpy)
+* [Pandas](https://github.com/pandas-dev/pandas)
