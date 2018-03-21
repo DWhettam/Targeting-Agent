@@ -13,7 +13,7 @@ An MLP used to predict whether a point is on target or not. Part of the Universi
 * Optimisation Algorithm: Stochastic Gradient Descent 
 * Loss Function: Binary Cross-entropy
 
-Plot of the given data: 
+Plot of the given data:  
 ![Plot of data](https://github.com/DWhettam/Targeting-Agent/blob/master/Target.png)
 
 Over 1000 epochs, this network is classifying with ~98% accuracy
