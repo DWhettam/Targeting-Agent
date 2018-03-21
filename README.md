@@ -17,3 +17,8 @@ Plot of the given data:
 ![Plot of data](https://github.com/DWhettam/Targeting-Agent/blob/master/Target.png)
 
 Over 1000 epochs, this network is classifying with ~98% accuracy
+
+### Requirements
+* [Keras](https://github.com/keras-team/keras) with [TensorFlow](https://www.tensorflow.org) backend
+* [Matplotlib](https://github.com/matplotlib/matplotlib)
+* [SciKit-Learn](https://github.com/scikit-learn/scikit-learn)
