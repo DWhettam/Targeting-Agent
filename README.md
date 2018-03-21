@@ -13,4 +13,5 @@ An MLP used to predict whether a point is on target or not. Part of the Universi
 * Optimisation Algorithm: Stochastic Gradient Descent 
 * Loss Function: Binary Cross-entropy
 
-![](target.png?raw=true)
+The given data can be plotted:
+![Plot of data](https://github.com/DWhettam/Targeting-Agent/blob/master/Target.png)
