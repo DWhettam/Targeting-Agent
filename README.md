@@ -1,6 +1,6 @@
 # Targeting Agent
 
-An MLP used to predict whether a point is on target or not.
+An MLP used to predict whether a point is on target or not. Part of the University of Hull Neural, Emergent and Agent Technologies module.
 
 ## Network Architecture:
 * Number of Hidden Layers: 2 
@@ -13,4 +13,4 @@ An MLP used to predict whether a point is on target or not.
 * Optimisation Algorithm: Stochastic Gradient Descent 
 * Loss Function: Binary Cross-entropy
 
-
+![](target.png?raw=true)
