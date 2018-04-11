@@ -41,29 +41,39 @@ print(x_test.shape[0], 'test samples')
 #     plt.scatter(df.ix[idx,0], df.ix[idx,1],c = col, marker = marker)
 # plt.show()
 
-learning_rates = [0.00001,0.00001,0.00001,0.00001,0.00001,0.00001,
-                    0.0001,0.0001,0.0001,0.0001,0.0001,0.0001,
-                    0.001,0.001,0.001,0.001,0.001,0.001,
-                    0.01,0.01,0.01,0.01,0.01,0.01,
-                    0.1,0.1,0.1,0.1,0.1,0.1,
-                    1,1,1,1,1,1]
-momentum_terms = [0.00001,0.0001,0.001,0.01,0.1,1,
-                    0.00001,0.0001,0.001,0.01,0.1,1,
-                    0.00001,0.0001,0.001,0.01,0.1,1,
-                    0.00001,0.0001,0.001,0.01,0.1,1,
-                    0.00001,0.0001,0.001,0.01,0.1,1,
-                    0.00001,0.0001,0.001,0.01,0.1,1,]
-train_accuracies = np.zeros([36])
-test_accuracies = np.zeros([36])
-for idx, learn_rate in enumerate(learning_rates):
+
+learning_rates = [0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,
+                    0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2,
+                    0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.3,
+                    0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,0.4,
+                    0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,
+                    0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,
+                    0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,
+                    0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,0.8,
+                    0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,
+                    1,1,1,1,1,1,1,1,1,1]
+momentum_terms = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,
+                    0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+train_accuracies = np.zeros([100])
+test_accuracies = np.zeros([100])
+
+for idx, lr in enumerate(learning_rates):
     model = Sequential()
-    model.add(Dense(18, activation='relu', input_shape = (2,)))
-    model.add(Dense(18, activation='relu'))
+    model.add(Dense(8, activation='sigmoid', input_shape = (2,)))
+    model.add(Dense(8, activation='sigmoid'))
     model.add(Dense(1, activation='sigmoid'))
     model.summary()
 
     model.compile(loss='binary_crossentropy',
-                  optimizer=SGD(lr = learning_rates[idx], momentum = momentum_terms[idx], decay = 0.001),
+                  optimizer=SGD(lr = lr, momentum = learning_rates[idx]),
                   metrics=[binary_accuracy])
 
     history = model.fit(x_train, y_train,
@@ -82,16 +92,27 @@ z = test_accuracies
 
 fig = plt.figure()
 ax = fig.gca(projection='3d')
-ticks = [0.00001,0.0001,0.001,0.01,0.1,1]
-ax.set_xticks(np.log10(ticks))
-ax.set_xticklabels(ticks)
-ax.set_yticks(np.log10(ticks))
-ax.set_yticklabels(ticks)
 ax.set_xlabel('Momentum Term')
 ax.set_ylabel('Learning Rate')
 ax.set_zlabel('Accuracy')
-ax.plot_trisurf(np.log10(x), np.log10(y), z, cmap='viridis', edgecolor='none');
+ax.plot_trisurf(x, y, z, cmap='viridis', edgecolor='none');
 plt.show()
+# x = nodes
+# y = nodes2
+# z = test_accuracies
+#
+# fig = plt.figure()
+# ax = fig.gca(projection='3d')
+# ticks = [1,2,4,8,16,32]
+# ax.set_xticks(np.log10(ticks))
+# ax.set_xticklabels(ticks)
+# ax.set_yticks(np.log10(ticks))
+# ax.set_yticklabels(ticks)
+# ax.set_xlabel('First Layer Nodes')
+# ax.set_ylabel('Second Layer Nodes')
+# ax.set_zlabel('Accuracy')
+# ax.plot_trisurf(np.log10(x), np.log10(y), z, cmap='viridis', edgecolor='none');
+# plt.show()
 
 y_pred = model.predict(x_test)
 y_pred[y_pred <= 0.5] = 0
