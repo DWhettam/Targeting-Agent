@@ -5,7 +5,7 @@ An MLP used to predict whether a point is on target or not. Part of the Universi
 ## Network Architecture:
 * Number of Hidden Layers: 2 
 * Activation function:
-  * Hidden Layers: ReLU
+  * Hidden Layers: Sigmoid
   * Output Layer: Sigmoid
 * Number of Nodes: 18 
 * Learning Rate: 0.01 
